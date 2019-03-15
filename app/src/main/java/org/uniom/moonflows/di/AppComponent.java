@@ -1,5 +1,6 @@
 package org.uniom.moonflows.di;
 
+import org.uniom.moonflows.activities.AppInit;
 import org.uniom.moonflows.activities.InitIPFS;
 import org.uniom.moonflows.activities.Login;
 
@@ -12,6 +13,8 @@ import dagger.Component;
 public interface AppComponent {
     void inject(InitIPFS mainActivity);
 
-    void inject(Login addIPFSContent);
+    void inject(Login Login);
+
+    void inject(AppInit AppInit);
 
 }

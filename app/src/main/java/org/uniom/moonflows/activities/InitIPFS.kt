@@ -32,20 +32,16 @@ class InitIPFS : AppCompatActivity() {
             if (it.exists()) it.readText() else ""
         }
         val availableVersionText = assets.open("version").reader().readText()
-        if (!State.isDaemonRunning && !ipfsDaemon.isReady() && (currentVersionText.isEmpty() || currentVersionText != availableVersionText)){
-            ipfsDaemon.download(this, runInit = true) {
-                ipfsDaemon.getVersionFile().writeText(assets.open("version").reader().readText())
+        if (!State.isDaemonRunning){
+            if (!ipfsDaemon.isReady() || (currentVersionText.isEmpty() || currentVersionText != availableVersionText)) {
+                ipfsDaemon.download(this, runInit = true) {
+                    ipfsDaemon.getVersionFile().writeText(assets.open("version").reader().readText())
+                }
             }
-        }
-
-
-        btStart.setOnClickListener{
             var serviceIntent = Intent(this, IPFSDaemonService::class.java);
             startService(serviceIntent)
 
-            btStart.isEnabled = false
-
-            val progressDialog = ProgressDialog(this)
+            val progressDialog = ProgressDialog(this, 0)
             progressDialog.setMessage("starting daemon")
             progressDialog.show()
 
@@ -65,13 +61,8 @@ class InitIPFS : AppCompatActivity() {
                     startActivityFromClass(Login::class.java)
                 }
             }).start()
-
         }
+        else startActivityFromClass(Login::class.java)
 
-
-        btStop.setOnClickListener {
-            btStart.isEnabled = true
-            stopService(Intent(this, IPFSDaemonService::class.java))
-        }
     }
 }
